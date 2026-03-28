@@ -1,0 +1,9 @@
+{
+  "name": "@nest/database",
+  "version": "0.0.1",
+  "author": "xzec",
+  "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
