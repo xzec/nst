@@ -8,6 +8,20 @@
       "when": 1774704711775,
       "tag": "0000_overconfident_screwball",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1774727371551,
+      "tag": "0001_whole_reavers",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1774728605619,
+      "tag": "0002_rich_rogue",
+      "breakpoints": true
     }
   ]
 }
