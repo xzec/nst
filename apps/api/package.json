@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "author": "xzec",
   "license": "MIT",
+  "type": "commonjs",
   "scripts": {
     "build": "nest build",
     "start": "nest start",

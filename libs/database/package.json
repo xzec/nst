@@ -2,6 +2,7 @@
   "name": "@nest/database",
   "version": "0.0.1",
   "author": "xzec",
+  "type": "module",
   "license": "MIT",
   "scripts": {
     "db:studio": "drizzle-kit studio",
