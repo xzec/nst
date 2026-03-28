@@ -4,12 +4,6 @@
   "author": "xzec",
   "type": "module",
   "license": "MIT",
-  "scripts": {
-    "db:studio": "drizzle-kit studio",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:seed": "tsdown src/seed.ts && node dist/seed.mjs"
-  },
   "dependencies": {
     "dotenv": "17.3.1",
     "drizzle-orm": "0.45.2",
