@@ -23,7 +23,7 @@ export const orderItems = pgTable('order_items', {
 export const orderStats = pgMaterializedView('order_stats').as((qb) =>
   qb
     .select({
-      customer_id: users.id,
+      customer_id: sql`${users.id}`.as('customer_id'),
       name: users.name,
       total_orders: countDistinct(orders.id).as('total_orders'),
       total_spend: sql`sum(${orderItems.price} * ${orderItems.quantity})`.as('total_spend'),
