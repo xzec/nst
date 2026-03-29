@@ -36,6 +36,13 @@
       "when": 1774778054428,
       "tag": "0004_simple_infant_terrible",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1774779240306,
+      "tag": "0005_materialized_view_order_stats_customer_id_unique_idx",
+      "breakpoints": true
     }
   ]
 }
