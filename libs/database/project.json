@@ -18,6 +18,28 @@
       "outputs": ["{projectRoot}/src/drizzle"]
     },
     "migrate": {
+      "dependsOn": ["post-migrate"]
+    },
+    "post-migrate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node dist/post-migrate.mjs",
+        "cwd": "libs/database"
+      },
+      "dependsOn": ["post-migrate:build"]
+    },
+    "post-migrate:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsdown src/post-migrate.ts",
+        "cwd": "libs/database"
+      },
+      "cache": true,
+      "inputs": ["{projectRoot}/src/post-migrate.ts", "sharedGlobals"],
+      "outputs": ["{projectRoot}/dist/post-migrate.mjs"],
+      "dependsOn": ["drizzle-kit-migrate"]
+    },
+    "drizzle-kit-migrate": {
       "executor": "nx:run-commands",
       "options": {
         "command": "drizzle-kit migrate",
