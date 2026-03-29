@@ -43,6 +43,20 @@
       "when": 1774779240306,
       "tag": "0005_materialized_view_order_stats_customer_id_unique_idx",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1774779999821,
+      "tag": "0006_brief_zaran",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1774783686921,
+      "tag": "0007_strange_corsair",
+      "breakpoints": true
     }
   ]
 }
