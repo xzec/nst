@@ -13,16 +13,12 @@ async function main() {
   await seed(db, schema).refine((f) => ({
     users: {
       count: 20,
-      with: {
-        orders: 1,
-      },
     },
     orders: {
-      with: {
-        orderItems: 1,
-      },
+      count: 60,
     },
     orderItems: {
+      count: 120,
       columns: {
         quantity: f.int({
           minValue: 1,
