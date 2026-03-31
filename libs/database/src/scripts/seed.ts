@@ -2,6 +2,7 @@ import { drizzle } from 'drizzle-orm/node-postgres'
 import { seed, reset } from 'drizzle-seed'
 import * as schema from '~/schema'
 import { Pool } from 'pg'
+import { orderStats } from '~/schema'
 
 console.info('seed running...')
 
@@ -33,6 +34,8 @@ await seed(db, schema, { seed: process.env.DRIZZLE_SEED ?? Date.now() }).refine(
     },
   },
 }))
+
+await db.refreshMaterializedView(orderStats).concurrently()
 
 await pool.end()
 
