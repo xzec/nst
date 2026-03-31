@@ -108,12 +108,12 @@ importers:
 
   libs/database:
     dependencies:
-      dotenv:
-        specifier: 17.3.1
-        version: 17.3.1
       drizzle-orm:
         specifier: 0.45.2
         version: 0.45.2(@types/pg@8.20.0)(pg@8.20.0)(postgres@3.4.8)
+      drizzle-seed:
+        specifier: 0.3.1
+        version: 0.3.1(drizzle-orm@0.45.2(@types/pg@8.20.0)(pg@8.20.0)(postgres@3.4.8))
       pg:
         specifier: 8.20.0
         version: 8.20.0
@@ -127,9 +127,6 @@ importers:
       drizzle-kit:
         specifier: 0.31.10
         version: 0.31.10
-      drizzle-seed:
-        specifier: 0.3.1
-        version: 0.3.1(drizzle-orm@0.45.2(@types/pg@8.20.0)(pg@8.20.0)(postgres@3.4.8))
       tsdown:
         specifier: 0.21.7
         version: 0.21.7(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)(synckit@0.11.12)(typescript@6.0.2)
@@ -2571,10 +2568,6 @@ packages:
 
   dotenv@16.4.7:
     resolution: {integrity: sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ==}
-    engines: {node: '>=12'}
-
-  dotenv@17.3.1:
-    resolution: {integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==}
     engines: {node: '>=12'}
 
   drizzle-kit@0.31.10:
@@ -6958,8 +6951,6 @@ snapshots:
       dotenv: 16.4.7
 
   dotenv@16.4.7: {}
-
-  dotenv@17.3.1: {}
 
   drizzle-kit@0.31.10:
     dependencies:

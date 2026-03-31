@@ -23,7 +23,7 @@
     "post-migrate": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node dist/post-migrate.mjs",
+        "command": "node dist/post-migrate/index.mjs",
         "cwd": "libs/database"
       },
       "dependsOn": ["post-migrate:build"]
@@ -31,12 +31,12 @@
     "post-migrate:build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "tsdown src/post-migrate.ts",
+        "command": "tsdown --filter post-migrate",
         "cwd": "libs/database"
       },
       "cache": true,
-      "inputs": ["{projectRoot}/src/post-migrate.ts", "sharedGlobals"],
-      "outputs": ["{projectRoot}/dist/post-migrate.mjs"],
+      "inputs": ["{projectRoot}/src/scripts/post-migrate.ts", "sharedGlobals"],
+      "outputs": ["{projectRoot}/dist/post-migrate/index.mjs"],
       "dependsOn": ["drizzle-kit-migrate"]
     },
     "drizzle-kit-migrate": {
@@ -49,17 +49,17 @@
     "seed:build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "tsdown src/seed.ts",
+        "command": "tsdown --filter seed",
         "cwd": "libs/database"
       },
       "cache": true,
       "inputs": ["default", "^default"],
-      "outputs": ["{projectRoot}/dist/seed.mjs"]
+      "outputs": ["{projectRoot}/dist/seed/index.mjs"]
     },
     "seed": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node dist/seed.mjs",
+        "command": "node dist/seed/index.mjs",
         "cwd": "libs/database"
       },
       "dependsOn": ["seed:build"]
