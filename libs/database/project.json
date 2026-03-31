@@ -23,7 +23,7 @@
     "post-migrate": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node dist/post-migrate/index.mjs",
+        "command": "node dist/post-migrate/post-migrate.mjs",
         "cwd": "libs/database"
       },
       "dependsOn": ["post-migrate:build"]
@@ -36,7 +36,7 @@
       },
       "cache": true,
       "inputs": ["{projectRoot}/src/scripts/post-migrate.ts", "sharedGlobals"],
-      "outputs": ["{projectRoot}/dist/post-migrate/index.mjs"],
+      "outputs": ["{projectRoot}/dist/post-migrate/post-migrate.mjs"],
       "dependsOn": ["drizzle-kit-migrate"]
     },
     "drizzle-kit-migrate": {
@@ -54,12 +54,12 @@
       },
       "cache": true,
       "inputs": ["default", "^default"],
-      "outputs": ["{projectRoot}/dist/seed/index.mjs"]
+      "outputs": ["{projectRoot}/dist/seed/seed.mjs"]
     },
     "seed": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node dist/seed/index.mjs",
+        "command": "node dist/seed/seed.mjs",
         "cwd": "libs/database"
       },
       "dependsOn": ["seed:build"]
