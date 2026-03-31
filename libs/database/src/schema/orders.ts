@@ -1,11 +1,6 @@
-import { integer, numeric, pgMaterializedView, pgTable, timestamp, varchar } from 'drizzle-orm/pg-core'
+import { integer, numeric, pgMaterializedView, pgTable, timestamp } from 'drizzle-orm/pg-core'
 import { countDistinct, desc, eq, max, sql } from 'drizzle-orm'
-
-export const users = pgTable('users', {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar({ length: 255 }).notNull(),
-  email: varchar({ length: 255 }).notNull().unique(),
-})
+import { users } from '~/schema/users'
 
 export const orders = pgTable('orders', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
