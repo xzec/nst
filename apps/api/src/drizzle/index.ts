@@ -1,2 +1,1 @@
-export { DrizzleModule, type Database, type DrizzleModuleOptions } from './drizzle.module'
-export { DRIZZLE } from './drizzle.token'
+export { DrizzleService } from './drizzle.service'
