@@ -4,7 +4,7 @@
   "sourceRoot": "libs/database/src",
   "projectType": "application",
   "namedInputs": {
-    "schema": ["{projectRoot}/src/schema.ts"]
+    "schema": ["{projectRoot}/src/schema/**/*"]
   },
   "targets": {
     "build": {
@@ -14,7 +14,7 @@
         "cwd": "libs/database"
       },
       "cache": true,
-      "inputs": ["{projectRoot}/src/schema/**/*", "sharedGlobals"],
+      "inputs": ["schema", "{projectRoot}/src/database/**/*", "sharedGlobals"],
       "outputs": ["{projectRoot}/dist/database"]
     },
     "generate": {
@@ -24,7 +24,7 @@
         "cwd": "libs/database"
       },
       "cache": true,
-      "inputs": ["schema"],
+      "inputs": ["schema", "sharedGlobals"],
       "outputs": ["{projectRoot}/src/drizzle"]
     },
     "migrate": {
@@ -63,7 +63,7 @@
         "cwd": "libs/database"
       },
       "cache": true,
-      "inputs": ["default", "^default"],
+      "inputs": ["schema", "{projectRoot}/src/scripts/seed.ts", "sharedGlobals"],
       "outputs": ["{projectRoot}/dist/seed/seed.mjs"]
     },
     "seed": {

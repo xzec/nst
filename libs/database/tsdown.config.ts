@@ -3,7 +3,7 @@ import { defineConfig } from 'tsdown'
 export default defineConfig([
   {
     name: 'database',
-    entry: 'src/schema/index.ts',
+    entry: 'src/database/index.ts',
     platform: 'node',
     outDir: 'dist/database',
     dts: true,
