@@ -14,5 +14,9 @@
     "@types/pg": "8.20.0",
     "drizzle-kit": "0.31.10",
     "tsdown": "0.21.7"
+  },
+  "exports": {
+    ".": "./dist/database/index.mjs",
+    "./package.json": "./package.json"
   }
 }

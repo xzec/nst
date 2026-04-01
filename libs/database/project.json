@@ -7,6 +7,16 @@
     "schema": ["{projectRoot}/src/schema.ts"]
   },
   "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsdown --filter database",
+        "cwd": "libs/database"
+      },
+      "cache": true,
+      "inputs": ["{projectRoot}/src/schema/**/*", "sharedGlobals"],
+      "outputs": ["{projectRoot}/dist/database"]
+    },
     "generate": {
       "executor": "nx:run-commands",
       "options": {

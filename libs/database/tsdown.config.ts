@@ -2,6 +2,16 @@ import { defineConfig } from 'tsdown'
 
 export default defineConfig([
   {
+    name: 'database',
+    entry: 'src/schema/index.ts',
+    platform: 'node',
+    outDir: 'dist/database',
+    dts: true,
+    deps: {
+      onlyBundle: [],
+    },
+  },
+  {
     name: 'seed',
     entry: 'src/scripts/seed.ts',
     platform: 'node',
