@@ -1,5 +1,5 @@
 {
-  "name": "@nest/api",
+  "name": "@workspace/api",
   "version": "0.0.1",
   "author": "xzec",
   "license": "MIT",
@@ -8,9 +8,12 @@
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
+    "@workspace/database": "workspace:*",
+    "drizzle-orm": "0.45.2",
+    "drizzle-zod": "0.8.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "@nest/database": "workspace:*"
+    "zod": "4.3.6"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.0",

@@ -4,18 +4,18 @@
   "sourceRoot": "libs/database/src",
   "projectType": "application",
   "namedInputs": {
-    "schema": ["{projectRoot}/src/schema/**/*"]
+    "schema": ["{projectRoot}/src/schema"]
   },
   "targets": {
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "tsdown --filter database",
+        "command": "tsdown",
         "cwd": "libs/database"
       },
       "cache": true,
-      "inputs": ["schema", "{projectRoot}/src/database/**/*", "sharedGlobals"],
-      "outputs": ["{projectRoot}/dist/database"]
+      "inputs": ["{projectRoot}/src", "schema", "sharedGlobals"],
+      "outputs": ["{projectRoot}/dist"]
     },
     "generate": {
       "executor": "nx:run-commands",
@@ -33,20 +33,9 @@
     "post-migrate": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node dist/post-migrate/post-migrate.mjs",
+        "command": "tsx scripts/post-migrate.ts",
         "cwd": "libs/database"
       },
-      "dependsOn": ["post-migrate:build"]
-    },
-    "post-migrate:build": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "tsdown --filter post-migrate",
-        "cwd": "libs/database"
-      },
-      "cache": true,
-      "inputs": ["{projectRoot}/src/scripts/post-migrate.ts", "sharedGlobals"],
-      "outputs": ["{projectRoot}/dist/post-migrate/post-migrate.mjs"],
       "dependsOn": ["drizzle-kit-migrate"]
     },
     "drizzle-kit-migrate": {
@@ -56,23 +45,12 @@
         "cwd": "libs/database"
       }
     },
-    "seed:build": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "tsdown --filter seed",
-        "cwd": "libs/database"
-      },
-      "cache": true,
-      "inputs": ["schema", "{projectRoot}/src/scripts/seed.ts", "sharedGlobals"],
-      "outputs": ["{projectRoot}/dist/seed/seed.mjs"]
-    },
     "seed": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node dist/seed/seed.mjs",
+        "command": "tsx scripts/seed.ts",
         "cwd": "libs/database"
-      },
-      "dependsOn": ["seed:build"]
+      }
     },
     "studio": {
       "executor": "nx:run-commands",

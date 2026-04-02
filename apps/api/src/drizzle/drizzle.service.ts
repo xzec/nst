@@ -1,12 +1,13 @@
 import { Injectable, OnModuleDestroy } from '@nestjs/common'
-import { createDb, type Database } from '@nest/database'
+import { schema } from '@workspace/database'
+import { drizzle } from 'drizzle-orm/node-postgres'
 
 @Injectable()
 export class DrizzleService implements OnModuleDestroy {
-  readonly db: Database
+  readonly db: ReturnType<typeof drizzle>
 
   constructor() {
-    this.db = createDb(process.env.DATABASE_URL)
+    this.db = drizzle(process.env.DATABASE_URL, { schema })
   }
 
   async onModuleDestroy() {
