@@ -7,7 +7,6 @@ export type DrizzleDb = NodePgDatabase<typeof schema>
 export const DRIZZLE_TOKEN = Symbol('DRIZZLE_TOKEN')
 
 export function createDrizzleInstance(options: PoolConfig) {
-  console.log(options)
   const pool = new Pool({
     connectionString: options.connectionString,
     max: options.max,
