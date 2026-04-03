@@ -1,7 +1,17 @@
-import { Controller, Get, HttpStatus, Param, Res } from '@nestjs/common'
-import { UserService } from '~/user/user.service'
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  ParseIntPipe,
+  Post,
+  UsePipes,
+} from '@nestjs/common'
+import { type UserInsert, UserInsertValidationPipe, UserService } from '~/user/user.service'
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
-import type { Response } from 'express'
+import { ErrorCode } from '~/config/error'
 
 @Controller('users')
 export class UserController {
@@ -12,11 +22,26 @@ export class UserController {
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiResponse({ status: 200, description: 'Query successful' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async getUser(@Res() res: Response, @Param('id') id: string) {
-    const user = await this.userService.findById(Number(id))
+  async getUser(@Param('id', ParseIntPipe) id: number) {
+    const user = await this.userService.findById(id)
+    if (!user) throw new NotFoundException({ code: ErrorCode.USER_NOT_FOUND, message: `User ${id} not found` })
+    return user
+  }
 
-    if (!user) res.status(HttpStatus.NOT_FOUND).send('User not found')
-
-    res.status(HttpStatus.OK).send(user)
+  @Post()
+  @ApiOperation({ summary: 'Create new user' })
+  @ApiResponse({ status: 201, description: 'User created successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid request parameters' })
+  @UsePipes(UserInsertValidationPipe)
+  async createUser(@Body() createUser: UserInsert) {
+    try {
+      const user = await this.userService.create(createUser)
+      return user
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new BadRequestException({ code: ErrorCode.BAD_REQUEST, message: error.message })
+      }
+      throw error
+    }
   }
 }
