@@ -3,6 +3,11 @@ import { seed, reset } from 'drizzle-seed'
 import * as schema from '~/schema'
 import { Pool } from 'pg'
 import { orderStats } from '~/schema'
+import { sql } from 'drizzle-orm'
+
+const USERS_COUNT = 20
+const ORDERS_COUNT = 60
+const ORDER_ITEMS_COUNT = 120
 
 console.info('seed running...')
 
@@ -15,13 +20,13 @@ await reset(db, schema)
 await seed(db, schema, { seed: process.env.DRIZZLE_SEED ? Number(process.env.DRIZZLE_SEED) : Date.now() }).refine(
   (f) => ({
     users: {
-      count: 20,
+      count: USERS_COUNT,
     },
     orders: {
-      count: 60,
+      count: ORDERS_COUNT,
     },
     orderItems: {
-      count: 120,
+      count: ORDER_ITEMS_COUNT,
       columns: {
         quantity: f.int({
           minValue: 1,
@@ -38,6 +43,10 @@ await seed(db, schema, { seed: process.env.DRIZZLE_SEED ? Number(process.env.DRI
 )
 
 await db.refreshMaterializedView(orderStats).concurrently()
+
+await db.execute(sql`alter sequence users_id_seq restart with ${sql.raw(String(USERS_COUNT + 1))};
+alter sequence orders_id_seq restart with ${sql.raw(String(ORDERS_COUNT + 1))};
+alter sequence order_items_id_seq restart with ${sql.raw(String(ORDER_ITEMS_COUNT + 1))};`)
 
 await pool.end()
 
