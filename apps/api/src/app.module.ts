@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common'
+import { type MiddlewareConsumer, Module, type NestModule } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { DrizzleModule } from '~/drizzle'
 import { UserModule } from '~/user/user.module'
-import { validateEnv } from '~/config/env.schema'
+import { validateEnv } from '~/common/env.schema'
+import { LoggerMiddleware } from '~/common/logger.middleware'
 
 @Module({
   imports: [
@@ -15,4 +16,8 @@ import { validateEnv } from '~/config/env.schema'
     UserModule,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*')
+  }
+}

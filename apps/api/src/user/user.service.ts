@@ -4,8 +4,8 @@ import { users } from '@workspace/database'
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from 'drizzle-zod'
 import { DRIZZLE_TOKEN, type DrizzleDb } from '~/drizzle/drizzle.config'
 import { z } from 'zod'
-import { ZodValidationPipe } from '~/config/zod-validation.pipe'
-import { ErrorCode } from '~/config/error'
+import { ZodValidationPipe } from '~/common/zod-validation.pipe'
+import { ErrorCode } from '~/common/error'
 
 export const userSelectSchema = createSelectSchema(users)
 
@@ -36,6 +36,7 @@ export class UserService {
 
   async update(id: number, value: UserUpdate) {
     const [row] = await this.db.update(users).set(value).where(eq(users.id, id)).returning()
+    console.log(row)
 
     if (!row) throw new NotFoundException({ code: ErrorCode.USER_NOT_FOUND, message: `User ${id} not found` })
 
