@@ -1,12 +1,18 @@
 import { Module } from '@nestjs/common'
-import { AppController } from '~/app.controller'
-import { AppService } from '~/app.service'
-import { DrizzleService } from '~/drizzle'
-import { UserController } from '~/user/user.controller'
-import { UserService } from '~/user/user.service'
+import { ConfigModule } from '@nestjs/config'
+import { DrizzleModule } from '~/drizzle'
+import { UserModule } from '~/user/user.module'
+import { validateEnv } from '~/config/env.schema'
 
 @Module({
-  controllers: [AppController, UserController],
-  providers: [AppService, DrizzleService, UserService],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['../../.env', '.env'],
+      validate: validateEnv,
+    }),
+    DrizzleModule.forRoot(),
+    UserModule,
+  ],
 })
 export class AppModule {}

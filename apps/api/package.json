@@ -6,11 +6,15 @@
   "type": "commonjs",
   "dependencies": {
     "@nestjs/common": "^11.0.1",
+    "@nestjs/config": "4.0.3",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/swagger": "11.2.6",
+    "@scalar/nestjs-api-reference": "1.1.5",
     "@workspace/database": "workspace:*",
     "drizzle-orm": "0.45.2",
     "drizzle-zod": "0.8.3",
+    "pg": "8.20.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "zod": "4.3.6"
@@ -24,6 +28,7 @@
     "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.12.0",
+    "@types/pg": "8.20.0",
     "@types/supertest": "^6.0.2",
     "jest": "^30.0.0",
     "source-map-support": "^0.5.21",
