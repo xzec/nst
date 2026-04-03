@@ -6,10 +6,17 @@ import {
   NotFoundException,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   UsePipes,
 } from '@nestjs/common'
-import { type UserInsert, UserInsertValidationPipe, UserService } from '~/user/user.service'
+import {
+  type UserInsert,
+  UserInsertValidationPipe,
+  UserService,
+  type UserUpdate,
+  UserUpdateValidationPipe,
+} from '~/user/user.service'
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 import { ErrorCode } from '~/config/error'
 
@@ -34,8 +41,27 @@ export class UserController {
   @ApiResponse({ status: 400, description: 'Invalid request parameters' })
   @UsePipes(UserInsertValidationPipe)
   async createUser(@Body() createUser: UserInsert) {
+    console.log(createUser)
     try {
       const user = await this.userService.create(createUser)
+      return user
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new BadRequestException({ code: ErrorCode.BAD_REQUEST, message: error.message })
+      }
+      throw error
+    }
+  }
+
+  @Patch(':id')
+  @ApiOperation({ summary: 'Update user' })
+  @ApiResponse({ status: 200, description: 'User updated successfully' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 400, description: 'Invalid request parameters' })
+  @UsePipes(UserUpdateValidationPipe)
+  async updateUser(@Param('id', ParseIntPipe) id: number, @Body() updateUser: UserUpdate) {
+    try {
+      const user = await this.userService.update(id, updateUser)
       return user
     } catch (error) {
       if (error instanceof Error) {
