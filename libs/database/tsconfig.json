@@ -3,7 +3,6 @@
   "compilerOptions": {
     "moduleResolution": "bundler",
     "module": "preserve",
-    "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"]
     }
