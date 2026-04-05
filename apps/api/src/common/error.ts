@@ -13,3 +13,8 @@ export const ErrorCode = {
 } as const
 
 export type ErrorCode = (typeof ErrorCode)[keyof typeof ErrorCode]
+
+export interface ErrorResponse {
+  code: ErrorCode
+  message: string
+}

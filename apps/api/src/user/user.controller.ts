@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   Param,
   ParseIntPipe,
   Patch,
@@ -11,22 +12,24 @@ import {
   UseFilters,
   UseInterceptors,
 } from '@nestjs/common'
+import { UserService } from '~/user/user.service'
+import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
+import { ErrorCode, type ErrorResponse } from '~/common/error'
+import { ApiResponseInterceptor } from '~/common/response/api-response.interceptor'
+import { HttpExceptionFilter } from '~/common/response/http-exception.filter'
 import {
   type UserInsert,
   UserInsertValidationPipe,
-  UserService,
   type UserUpdate,
   UserUpdateValidationPipe,
-} from '~/user/user.service'
-import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
-import { ErrorCode } from '~/common/error'
-import { ApiResponseInterceptor } from '~/common/response/api-response.interceptor'
-import { HttpExceptionFilter } from '~/common/response/http-exception.filter'
+} from '~/user/user.repository'
 
 @Controller('users')
 @UseInterceptors(ApiResponseInterceptor)
 @UseFilters(HttpExceptionFilter)
 export class UserController {
+  private readonly logger = new Logger(UserController.name)
+
   constructor(private readonly userService: UserService) {}
 
   @Get(':id')
@@ -63,7 +66,7 @@ export class UserController {
       return await this.userService.update(id, updateUser)
     } catch (error) {
       if (error instanceof Error) {
-        throw new BadRequestException({ code: ErrorCode.BAD_REQUEST, message: error.message })
+        throw new BadRequestException({ code: ErrorCode.BAD_REQUEST, message: error.message } satisfies ErrorResponse)
       }
       throw error
     }
@@ -79,7 +82,7 @@ export class UserController {
       return await this.userService.delete(id)
     } catch (error) {
       if (error instanceof Error) {
-        throw new BadRequestException({ code: ErrorCode.BAD_REQUEST, message: error.message })
+        throw new BadRequestException({ code: ErrorCode.BAD_REQUEST, message: error.message } satisfies ErrorResponse)
       }
       throw error
     }
