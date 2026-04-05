@@ -23,23 +23,28 @@ export class UserService {
 
   async findById(id: number) {
     const [row] = await this.db.select().from(users).where(eq(users.id, id))
-    const data = userSelectSchema.parse(row)
+    if (!row) throw new NotFoundException({ code: ErrorCode.USER_NOT_FOUND, message: `User ${id} not found` })
 
-    return data
+    return userSelectSchema.parse(row)
   }
 
   async create(value: UserInsert) {
     const [row] = await this.db.insert(users).values(value).returning()
 
-    return row
+    return userSelectSchema.parse(row)
   }
 
   async update(id: number, value: UserUpdate) {
     const [row] = await this.db.update(users).set(value).where(eq(users.id, id)).returning()
-    console.log(row)
-
     if (!row) throw new NotFoundException({ code: ErrorCode.USER_NOT_FOUND, message: `User ${id} not found` })
 
-    return row
+    return userSelectSchema.parse(row)
+  }
+
+  async delete(id: number) {
+    const [row] = await this.db.delete(users).where(eq(users.id, id)).returning()
+    if (!row) throw new NotFoundException({ code: ErrorCode.USER_NOT_FOUND, message: `User ${id} not found` })
+
+    return userSelectSchema.parse(row)
   }
 }
