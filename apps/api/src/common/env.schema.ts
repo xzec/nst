@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { formatZodError } from '~/common/format-zod-error'
 
 export type Env = z.infer<typeof envSchema>
 
@@ -43,8 +44,7 @@ export function validateEnv(env: unknown): Env {
   const { data, error } = envSchema.safeParse(env)
 
   if (error) {
-    const issues = error.issues.map((issue) => ` - ${issue.path.join('.')}: ${issue.message}`)
-    const validationError = [`Invalid environment variables:`, ...issues].join('\n')
+    const validationError = formatZodError('Invalid environment variables:', error)
 
     throw new Error(validationError, { cause: error })
   }
