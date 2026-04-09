@@ -5,6 +5,8 @@ import { users } from '@workspace/database'
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from 'drizzle-zod'
 import { ZodValidationPipe } from '~/common/zod-validation.pipe'
 import { z } from 'zod'
+import { Err, Ok, type Result } from 'oxide.ts'
+import { UserError, UserNotFoundError } from '~/user/user.error'
 
 export const USER_REPOSITORY = Symbol('USER_REPOSITORY')
 
@@ -23,11 +25,11 @@ export const UserUpdateValidationPipe = new ZodValidationPipe(userUpdateSchema)
 export class UserRepository {
   constructor(@Inject(DRIZZLE_TOKEN) private readonly db: DrizzleDb) {}
 
-  async findById(id: number): Promise<User | null> {
+  async findById(id: number): Promise<Result<User, UserError>> {
     const [row] = await this.db.select().from(users).where(eq(users.id, id))
-    if (!row) return null
+    if (!row) return Err(new UserNotFoundError())
 
-    return userSelectSchema.parse(row)
+    return Ok(userSelectSchema.parse(row))
   }
 
   async create(value: UserInsert): Promise<User> {

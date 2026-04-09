@@ -4,7 +4,7 @@ import {
   Controller,
   Delete,
   Get,
-  Logger,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Patch,
@@ -23,13 +23,13 @@ import {
   type UserUpdate,
   UserUpdateValidationPipe,
 } from '~/user/user.repository'
+import { match } from 'oxide.ts'
+import { UserNotFoundError } from '~/user/user.error'
 
 @Controller('users')
 @UseInterceptors(ApiResponseInterceptor)
 @UseFilters(HttpExceptionFilter)
 export class UserController {
-  private readonly logger = new Logger(UserController.name)
-
   constructor(private readonly userService: UserService) {}
 
   @Get(':id')
@@ -37,8 +37,24 @@ export class UserController {
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiResponse({ status: 200, description: 'Query successful' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async getUser(@Param('id', ParseIntPipe) id: number) {
-    return await this.userService.findById(id)
+  async getUser(
+    @Param(
+      'id',
+      new ParseIntPipe({
+        exceptionFactory: (error) => new BadRequestException({ code: ErrorCode.BAD_REQUEST, message: error }),
+      })
+    )
+    id: number
+  ) {
+    const result = await this.userService.findById(id)
+    return match(result, {
+      Ok: (user) => user,
+      Err: (error) => {
+        if (error instanceof UserNotFoundError)
+          throw new NotFoundException({ code: ErrorCode.USER_NOT_FOUND, message: 'User not found' })
+        throw error
+      },
+    })
   }
 
   @Post()

@@ -18,3 +18,10 @@ export interface ErrorResponse {
   code: ErrorCode
   message: string
 }
+
+export class DomainError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = this.constructor.name
+  }
+}

@@ -6,11 +6,8 @@ import { USER_REPOSITORY, type UserInsert, UserRepository, type UserUpdate } fro
 export class UserService {
   constructor(@Inject(USER_REPOSITORY) private readonly userRepository: UserRepository) {}
 
-  async findById(id: number) {
-    const user = await this.userRepository.findById(id)
-    if (!user) throw new NotFoundException({ code: ErrorCode.USER_NOT_FOUND, message: `User ${id} not found` })
-
-    return user
+  findById(id: number) {
+    return this.userRepository.findById(id)
   }
 
   async create(value: UserInsert) {
