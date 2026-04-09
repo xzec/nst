@@ -1,6 +1,6 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common'
 import { map, Observable } from 'rxjs'
-import type { ApiResponseSuccess } from '~/common/response/types'
+import type { ApiResponseSuccess } from '~/common/types/api-response'
 
 @Injectable()
 export class ApiResponseInterceptor implements NestInterceptor {

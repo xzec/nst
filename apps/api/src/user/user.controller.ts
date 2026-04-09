@@ -14,8 +14,8 @@ import {
 import { UserService } from '~/user/user.service'
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 import { ErrorCode, type ErrorResponse } from '~/common/error'
-import { ApiResponseInterceptor } from '~/common/response/api-response.interceptor'
-import { HttpExceptionFilter } from '~/common/response/http-exception.filter'
+import { ApiResponseInterceptor } from '~/common/interceptors/api-response.interceptor'
+import { HttpExceptionFilter } from '~/common/filters/http-exception.filter'
 import {
   type UserInsert,
   UserInsertValidationPipe,
@@ -24,7 +24,7 @@ import {
 } from '~/user/user.schema'
 import { match } from 'oxide.ts'
 import { UserNotFoundError } from '~/user/user.error'
-import { ParseIntIdPipe } from '~/common/parse-int-id.pipe'
+import { ParseIntIdPipe } from '~/common/pipes/parse-int-id.pipe'
 
 @Controller('users')
 @UseInterceptors(ApiResponseInterceptor)

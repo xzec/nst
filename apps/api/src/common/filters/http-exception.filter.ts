@@ -1,6 +1,6 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus, Logger } from '@nestjs/common'
 import { Response } from 'express'
-import type { ApiResponseError } from '~/common/response/types'
+import type { ApiResponseError } from '~/common/types/api-response'
 import { ErrorCode } from '~/common/error'
 
 @Catch()

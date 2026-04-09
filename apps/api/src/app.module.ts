@@ -2,8 +2,8 @@ import { type MiddlewareConsumer, Module, type NestModule } from '@nestjs/common
 import { ConfigModule } from '@nestjs/config'
 import { DrizzleModule } from '~/drizzle'
 import { UserModule } from '~/user/user.module'
-import { validateEnv } from '~/common/env.schema'
-import { LoggerMiddleware } from '~/common/logger.middleware'
+import { validateEnv } from '~/common/config/env.schema'
+import { LoggerMiddleware } from '~/common/middleware/logger.middleware'
 
 @Module({
   imports: [

@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { createDrizzleInstance, DRIZZLE_TOKEN } from '~/drizzle/drizzle.config'
-import type { Env } from '~/common/env.schema'
+import type { Env } from '~/common/config/env.schema'
 
 @Global()
 @Module({})
