@@ -1,6 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { ErrorCode } from '~/common/error'
-import { USER_REPOSITORY, type UserInsert, UserRepository, type UserUpdate } from '~/user/user.repository'
+import { USER_REPOSITORY, UserRepository } from '~/user/user.repository'
+import type { UserInsert, UserUpdate } from '~/user/user.schema'
 
 @Injectable()
 export class UserService {

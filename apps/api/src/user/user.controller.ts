@@ -6,7 +6,6 @@ import {
   Get,
   NotFoundException,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   UseFilters,
@@ -22,9 +21,10 @@ import {
   UserInsertValidationPipe,
   type UserUpdate,
   UserUpdateValidationPipe,
-} from '~/user/user.repository'
+} from '~/user/user.schema'
 import { match } from 'oxide.ts'
 import { UserNotFoundError } from '~/user/user.error'
+import { ParseIntIdPipe } from '~/common/parse-int-id.pipe'
 
 @Controller('users')
 @UseInterceptors(ApiResponseInterceptor)
@@ -38,12 +38,7 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'Query successful' })
   @ApiResponse({ status: 404, description: 'User not found' })
   async getUser(
-    @Param(
-      'id',
-      new ParseIntPipe({
-        exceptionFactory: (error) => new BadRequestException({ code: ErrorCode.BAD_REQUEST, message: error }),
-      })
-    )
+    @Param('id', ParseIntIdPipe)
     id: number
   ) {
     const result = await this.userService.findById(id)
@@ -77,7 +72,7 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'User updated successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 400, description: 'Invalid request parameters' })
-  async updateUser(@Param('id', ParseIntPipe) id: number, @Body(UserUpdateValidationPipe) updateUser: UserUpdate) {
+  async updateUser(@Param('id', ParseIntIdPipe) id: number, @Body(UserUpdateValidationPipe) updateUser: UserUpdate) {
     try {
       return await this.userService.update(id, updateUser)
     } catch (error) {
@@ -93,7 +88,7 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'User deleted successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 400, description: 'Invalid request parameters' })
-  async deleteUser(@Param('id', ParseIntPipe) id: number) {
+  async deleteUser(@Param('id', ParseIntIdPipe) id: number) {
     try {
       return await this.userService.delete(id)
     } catch (error) {
