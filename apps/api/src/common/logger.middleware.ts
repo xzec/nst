@@ -9,7 +9,12 @@ export class LoggerMiddleware implements NestMiddleware {
     const start = Date.now()
 
     res.on('finish', () => {
-      this.logger.log(`${req.method} ${req.originalUrl} ${res.statusCode} ${Date.now() - start}ms`)
+      const message = `${req.method} ${req.originalUrl} ${res.statusCode} ${Date.now() - start}ms`
+      if (res.statusCode >= 500) {
+        this.logger.error(message)
+      } else {
+        this.logger.log(message)
+      }
     })
 
     next()
