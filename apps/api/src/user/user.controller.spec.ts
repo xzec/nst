@@ -16,6 +16,12 @@ const fakeUserInsert = {
   name: 'John Smith',
   email: 'john@smith.com',
 }
+const expectedUserNotFoundError = {
+  response: { code: ErrorCode.USER_NOT_FOUND, message: 'User not found' },
+}
+const expectedUserEmailExistsError = {
+  response: { code: ErrorCode.EMAIL_EXISTS, message: 'E-mail address is already in use' },
+}
 
 describe('UserController', () => {
   let userController: UserController
@@ -55,9 +61,7 @@ describe('UserController', () => {
       vi.mocked(userService.findById).mockResolvedValue(Err(new UserNotFoundError()))
       const promise = userController.getUser(fakeUser.id)
       await expect(promise).rejects.toBeInstanceOf(NotFoundException)
-      await expect(promise).rejects.toMatchObject({
-        response: { code: ErrorCode.USER_NOT_FOUND, message: 'User not found' },
-      })
+      await expect(promise).rejects.toMatchObject(expectedUserNotFoundError)
     })
 
     it('rethrows uncaught errors unchanged', async () => {
@@ -82,9 +86,7 @@ describe('UserController', () => {
       vi.mocked(userService.create).mockResolvedValue(Err(new UserEmailExistsError()))
       const promise = userController.createUser(fakeUserInsert)
       await expect(promise).rejects.toBeInstanceOf(ConflictException)
-      await expect(promise).rejects.toMatchObject({
-        response: { code: ErrorCode.EMAIL_EXISTS, message: 'E-mail address is already in use' },
-      })
+      await expect(promise).rejects.toMatchObject(expectedUserEmailExistsError)
     })
 
     it('rethrows uncaught errors unchanged', async () => {
