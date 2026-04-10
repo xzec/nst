@@ -37,6 +37,7 @@ export class UserController {
   @ApiOperation({ summary: 'Get user by id' })
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiResponse({ status: 200, description: 'Query successful' })
+  @ApiResponse({ status: 400, description: 'Invalid request parameters' })
   @ApiResponse({ status: 404, description: 'User not found' })
   async getUser(
     @Param('id', ParseIntIdPipe)
@@ -73,17 +74,21 @@ export class UserController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update user' })
   @ApiResponse({ status: 200, description: 'User updated successfully' })
-  @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 400, description: 'Invalid request parameters' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 409, description: 'E-mail address is already in use' })
   async updateUser(@Param('id', ParseIntIdPipe) id: number, @Body(UserUpdateValidationPipe) updateUser: UserUpdate) {
-    try {
-      return await this.userService.update(id, updateUser)
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new BadRequestException({ code: ErrorCode.BAD_REQUEST, message: error.message } satisfies ErrorResponse)
-      }
-      throw error
-    }
+    const result = await this.userService.update(id, updateUser)
+    return match(result, {
+      Ok: (user) => user,
+      Err: (error) => {
+        if (error instanceof UserNotFoundError)
+          throw new NotFoundException({ code: ErrorCode.USER_NOT_FOUND, message: error.message })
+        if (error instanceof UserEmailExistsError)
+          throw new ConflictException({ code: ErrorCode.EMAIL_EXISTS, message: error.message })
+        throw error
+      },
+    })
   }
 
   @Delete(':id')

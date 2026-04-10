@@ -12,7 +12,7 @@ const fakeUser = {
   name: 'John Smith',
   email: 'john@smith.com',
 }
-const fakeUserInsert = {
+const fakeUserUpsert = {
   name: 'John Smith',
   email: 'john@smith.com',
 }
@@ -36,6 +36,7 @@ describe('UserController', () => {
           useValue: {
             findById: vi.fn(),
             create: vi.fn(),
+            update: vi.fn(),
           },
         },
       ],
@@ -73,25 +74,57 @@ describe('UserController', () => {
   describe('createUser', () => {
     it('calls userService.create with the given user', async () => {
       vi.mocked(userService.create).mockResolvedValue(Ok(fakeUser))
-      await userController.createUser(fakeUserInsert)
-      expect(userService.create).toHaveBeenCalledWith(fakeUserInsert)
+      await userController.createUser(fakeUserUpsert)
+      expect(userService.create).toHaveBeenCalledWith(fakeUserUpsert)
     })
 
     it('returns the created user', async () => {
       vi.mocked(userService.create).mockResolvedValue(Ok(fakeUser))
-      expect(await userController.createUser(fakeUserInsert)).toBe(fakeUser)
+      expect(await userController.createUser(fakeUserUpsert)).toBe(fakeUser)
     })
 
     it('throws ConflictException with appropriate contents when user e-mail already exists', async () => {
       vi.mocked(userService.create).mockResolvedValue(Err(new UserEmailExistsError()))
-      const promise = userController.createUser(fakeUserInsert)
+      const promise = userController.createUser(fakeUserUpsert)
       await expect(promise).rejects.toBeInstanceOf(ConflictException)
       await expect(promise).rejects.toMatchObject(expectedUserEmailExistsError)
     })
 
     it('rethrows uncaught errors unchanged', async () => {
       vi.mocked(userService.create).mockThrow(new Error('Mocked error'))
-      await expect(userController.createUser(fakeUserInsert)).rejects.toThrow('Mocked error')
+      await expect(userController.createUser(fakeUserUpsert)).rejects.toThrow('Mocked error')
+    })
+  })
+
+  describe('updateUser', () => {
+    it('calls userService.update with the given data', async () => {
+      vi.mocked(userService.update).mockResolvedValue(Ok(fakeUser))
+      await userController.updateUser(fakeUser.id, fakeUserUpsert)
+      expect(userService.update).toHaveBeenCalledWith(fakeUser.id, fakeUserUpsert)
+    })
+
+    it('returns the updated user', async () => {
+      vi.mocked(userService.update).mockResolvedValue(Ok(fakeUser))
+      expect(await userController.updateUser(fakeUser.id, fakeUserUpsert)).toBe(fakeUser)
+    })
+
+    it('throws NotFoundException with appropriate contents when user is not found', async () => {
+      vi.mocked(userService.update).mockResolvedValue(Err(new UserNotFoundError()))
+      const promise = userController.updateUser(fakeUser.id, fakeUserUpsert)
+      await expect(promise).rejects.toBeInstanceOf(NotFoundException)
+      await expect(promise).rejects.toMatchObject(expectedUserNotFoundError)
+    })
+
+    it('throws ConflictException with appropriate contents when user e-mail already exists', async () => {
+      vi.mocked(userService.update).mockResolvedValue(Err(new UserEmailExistsError()))
+      const promise = userController.updateUser(fakeUser.id, fakeUserUpsert)
+      await expect(promise).rejects.toBeInstanceOf(ConflictException)
+      await expect(promise).rejects.toMatchObject(expectedUserEmailExistsError)
+    })
+
+    it('rethrows uncaught errors unchanged', async () => {
+      vi.mocked(userService.update).mockThrow(new Error('Mocked error'))
+      await expect(userController.updateUser(fakeUser.id, fakeUserUpsert)).rejects.toThrow('Mocked error')
     })
   })
 })

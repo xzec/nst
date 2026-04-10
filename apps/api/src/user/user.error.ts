@@ -4,8 +4,9 @@ import { DatabaseError } from 'pg'
 import { USERS_EMAIL_UNIQUE_CONSTRAINT } from '@workspace/database'
 
 export class UserError extends DomainError {
-  constructor(message: string) {
+  constructor(message: string, cause?: unknown) {
     super(message)
+    this.cause = cause
   }
 
   /**
@@ -19,20 +20,20 @@ export class UserError extends DomainError {
         error.cause.code === PG_ERROR_CODES.UNIQUE_VIOLATION &&
         error.cause.constraint === USERS_EMAIL_UNIQUE_CONSTRAINT
       )
-        return new UserEmailExistsError()
+        return new UserEmailExistsError(error)
     }
     throw error
   }
 }
 
 export class UserNotFoundError extends UserError {
-  constructor() {
-    super('User not found')
+  constructor(cause?: unknown) {
+    super('User not found', cause)
   }
 }
 
 export class UserEmailExistsError extends UserError {
-  constructor() {
-    super('E-mail address is already in use')
+  constructor(cause?: unknown) {
+    super('E-mail address is already in use', cause)
   }
 }

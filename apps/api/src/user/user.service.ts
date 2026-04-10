@@ -24,11 +24,14 @@ export class UserService {
     }
   }
 
-  async update(id: number, value: UserUpdate) {
-    const user = await this.userRepository.update(id, value)
-    if (!user) throw new NotFoundException({ code: ErrorCode.USER_NOT_FOUND, message: `User ${id} not found` })
-
-    return user
+  async update(id: number, value: UserUpdate): Promise<Result<UserSelect, UserError>> {
+    try {
+      const user = await this.userRepository.update(id, value)
+      if (!user) return Err(new UserNotFoundError())
+      return Ok(user)
+    } catch (error) {
+      return Err(UserError.fromDrizzle(error))
+    }
   }
 
   async delete(id: number) {
