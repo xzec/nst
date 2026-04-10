@@ -93,8 +93,8 @@ export class UserController {
   @Delete(':id')
   @ApiOperation({ summary: 'Delete user' })
   @ApiResponse({ status: 200, description: 'User deleted successfully' })
-  @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 400, description: 'Invalid request parameters' })
+  @ApiResponse({ status: 404, description: 'User not found' })
   async deleteUser(@Param('id', ParseIntIdPipe) id: number) {
     const result = await this.userService.delete(id)
     return match(result, {

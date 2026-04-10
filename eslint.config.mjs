@@ -63,6 +63,7 @@ export default defineConfig(
     rules: {
       ...vitest.configs.recommended.rules,
       '@typescript-eslint/unbound-method': 'off',
+      'vitest/no-conditional-expect': 'off',
     },
   }
 )
