@@ -2,8 +2,6 @@ import { Inject, Injectable } from '@nestjs/common'
 import { DRIZZLE_TOKEN, type DrizzleDb } from '~/drizzle/drizzle.config'
 import { eq } from 'drizzle-orm'
 import { users } from '@workspace/database'
-import { Err, Ok, type Result } from 'oxide.ts'
-import { UserError, UserNotFoundError } from '~/user/user.error'
 import { type UserSelect, type UserInsert, type UserUpdate, userSelectSchema } from '~/user/user.schema'
 
 export const USER_REPOSITORY = Symbol('USER_REPOSITORY')
@@ -12,11 +10,11 @@ export const USER_REPOSITORY = Symbol('USER_REPOSITORY')
 export class UserRepository {
   constructor(@Inject(DRIZZLE_TOKEN) private readonly db: DrizzleDb) {}
 
-  async findById(id: number): Promise<Result<UserSelect, UserError>> {
+  async findById(id: number): Promise<UserSelect | null> {
     const [row] = await this.db.select().from(users).where(eq(users.id, id))
-    if (!row) return Err(new UserNotFoundError())
+    if (!row) return null
 
-    return Ok(userSelectSchema.parse(row))
+    return userSelectSchema.parse(row)
   }
 
   async create(value: UserInsert): Promise<UserSelect> {

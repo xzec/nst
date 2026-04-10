@@ -1,20 +1,27 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { ErrorCode } from '~/common/error'
 import { USER_REPOSITORY, UserRepository } from '~/user/user.repository'
-import type { UserInsert, UserUpdate } from '~/user/user.schema'
+import type { UserInsert, UserSelect, UserUpdate } from '~/user/user.schema'
+import { UserError, UserNotFoundError } from '~/user/user.error'
+import { Err, Ok, type Result } from 'oxide.ts'
 
 @Injectable()
 export class UserService {
   constructor(@Inject(USER_REPOSITORY) private readonly userRepository: UserRepository) {}
 
-  findById(id: number) {
-    return this.userRepository.findById(id)
+  async findById(id: number): Promise<Result<UserSelect, UserError>> {
+    const user = await this.userRepository.findById(id)
+    if (!user) return Err(new UserNotFoundError())
+    return Ok(user)
   }
 
-  async create(value: UserInsert) {
-    const user = await this.userRepository.create(value)
-
-    return user
+  async create(value: UserInsert): Promise<Result<UserSelect, UserError>> {
+    try {
+      const user = await this.userRepository.create(value)
+      return Ok(user)
+    } catch (error) {
+      return Err(UserError.fromDrizzle(error))
+    }
   }
 
   async update(id: number, value: UserUpdate) {

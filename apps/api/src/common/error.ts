@@ -19,9 +19,17 @@ export interface ErrorResponse {
   message: string
 }
 
-export class DomainError extends Error {
-  constructor(message: string) {
+export abstract class DomainError extends Error {
+  protected constructor(message: string) {
     super(message)
     this.name = this.constructor.name
   }
 }
+
+/**
+ * PostgreSQL error codes
+ * @see https://www.postgresql.org/docs/current/errcodes-appendix.html
+ */
+export const PG_ERROR_CODES = {
+  UNIQUE_VIOLATION: '23505',
+} as const
