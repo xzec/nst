@@ -37,6 +37,7 @@ describe('UserController', () => {
             findById: vi.fn(),
             create: vi.fn(),
             update: vi.fn(),
+            delete: vi.fn(),
           },
         },
       ],
@@ -125,6 +126,31 @@ describe('UserController', () => {
     it('rethrows uncaught errors unchanged', async () => {
       vi.mocked(userService.update).mockThrow(new Error('Mocked error'))
       await expect(userController.updateUser(fakeUser.id, fakeUserUpsert)).rejects.toThrow('Mocked error')
+    })
+  })
+
+  describe('deleteUser', () => {
+    it('calls userService.delete with the given id', async () => {
+      vi.mocked(userService.delete).mockResolvedValue(Ok(fakeUser))
+      await userController.deleteUser(fakeUser.id)
+      expect(userService.delete).toHaveBeenCalledWith(fakeUser.id)
+    })
+
+    it('returns the deleted user', async () => {
+      vi.mocked(userService.delete).mockResolvedValue(Ok(fakeUser))
+      expect(await userController.deleteUser(fakeUser.id)).toBe(fakeUser)
+    })
+
+    it('throws NotFoundException with appropriate contents when user is not found', async () => {
+      vi.mocked(userService.delete).mockResolvedValue(Err(new UserNotFoundError()))
+      const promise = userController.deleteUser(fakeUser.id)
+      await expect(promise).rejects.toBeInstanceOf(NotFoundException)
+      await expect(promise).rejects.toMatchObject(expectedUserNotFoundError)
+    })
+
+    it('rethrows uncaught errors unchanged', async () => {
+      vi.mocked(userService.delete).mockThrow(new Error('Mocked error'))
+      await expect(userController.deleteUser(fakeUser.id)).rejects.toThrow('Mocked error')
     })
   })
 })

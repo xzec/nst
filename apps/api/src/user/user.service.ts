@@ -1,5 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common'
-import { ErrorCode } from '~/common/error'
+import { Inject, Injectable } from '@nestjs/common'
 import { USER_REPOSITORY, UserRepository } from '~/user/user.repository'
 import type { UserInsert, UserSelect, UserUpdate } from '~/user/user.schema'
 import { UserError, UserNotFoundError } from '~/user/user.error'
@@ -34,10 +33,9 @@ export class UserService {
     }
   }
 
-  async delete(id: number) {
+  async delete(id: number): Promise<Result<UserSelect, UserError>> {
     const user = await this.userRepository.delete(id)
-    if (!user) throw new NotFoundException({ code: ErrorCode.USER_NOT_FOUND, message: `User ${id} not found` })
-
-    return { id: user.id }
+    if (!user) return Err(new UserNotFoundError())
+    return Ok(user)
   }
 }

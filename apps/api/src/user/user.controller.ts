@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   ConflictException,
   Controller,
@@ -14,7 +13,7 @@ import {
 } from '@nestjs/common'
 import { UserService } from '~/user/user.service'
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
-import { ErrorCode, type ErrorResponse } from '~/common/error'
+import { ErrorCode } from '~/common/error'
 import { ApiResponseInterceptor } from '~/common/interceptors/api-response.interceptor'
 import { HttpExceptionFilter } from '~/common/filters/http-exception.filter'
 import {
@@ -97,13 +96,14 @@ export class UserController {
   @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 400, description: 'Invalid request parameters' })
   async deleteUser(@Param('id', ParseIntIdPipe) id: number) {
-    try {
-      return await this.userService.delete(id)
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new BadRequestException({ code: ErrorCode.BAD_REQUEST, message: error.message } satisfies ErrorResponse)
-      }
-      throw error
-    }
+    const result = await this.userService.delete(id)
+    return match(result, {
+      Ok: (user) => user,
+      Err: (error) => {
+        if (error instanceof UserNotFoundError)
+          throw new NotFoundException({ code: ErrorCode.USER_NOT_FOUND, message: error.message })
+        throw error
+      },
+    })
   }
 }
