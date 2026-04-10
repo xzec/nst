@@ -3,12 +3,16 @@ import { UserController } from '~/user/user.controller'
 import { UserService } from '~/user/user.service'
 import { describe, expect, it, beforeEach, vi } from 'vitest'
 import { Err, Ok } from 'oxide.ts'
-import { UserNotFoundError } from '~/user/user.error'
-import { NotFoundException } from '@nestjs/common'
+import { UserEmailExistsError, UserNotFoundError } from '~/user/user.error'
+import { ConflictException, NotFoundException } from '@nestjs/common'
 import { ErrorCode } from '~/common/error'
 
 const fakeUser = {
   id: 1,
+  name: 'John Smith',
+  email: 'john@smith.com',
+}
+const fakeUserInsert = {
   name: 'John Smith',
   email: 'john@smith.com',
 }
@@ -25,6 +29,7 @@ describe('UserController', () => {
           provide: UserService,
           useValue: {
             findById: vi.fn(),
+            create: vi.fn(),
           },
         },
       ],
@@ -56,8 +61,35 @@ describe('UserController', () => {
     })
 
     it('rethrows uncaught errors unchanged', async () => {
-      vi.mocked(userService.findById).mockThrow(new Error('Unexpected error'))
-      await expect(userController.getUser(fakeUser.id)).rejects.toThrow('Unexpected error')
+      vi.mocked(userService.findById).mockThrow(new Error('Mocked error'))
+      await expect(userController.getUser(fakeUser.id)).rejects.toThrow('Mocked error')
+    })
+  })
+
+  describe('createUser', () => {
+    it('calls userService.create with the given user', async () => {
+      vi.mocked(userService.create).mockResolvedValue(Ok(fakeUser))
+      await userController.createUser(fakeUserInsert)
+      expect(userService.create).toHaveBeenCalledWith(fakeUserInsert)
+    })
+
+    it('returns the created user', async () => {
+      vi.mocked(userService.create).mockResolvedValue(Ok(fakeUser))
+      expect(await userController.createUser(fakeUserInsert)).toBe(fakeUser)
+    })
+
+    it('throws ConflictException with appropriate contents when user e-mail already exists', async () => {
+      vi.mocked(userService.create).mockResolvedValue(Err(new UserEmailExistsError()))
+      const promise = userController.createUser(fakeUserInsert)
+      await expect(promise).rejects.toBeInstanceOf(ConflictException)
+      await expect(promise).rejects.toMatchObject({
+        response: { code: ErrorCode.EMAIL_EXISTS, message: 'E-mail address is already in use' },
+      })
+    })
+
+    it('rethrows uncaught errors unchanged', async () => {
+      vi.mocked(userService.create).mockThrow(new Error('Mocked error'))
+      await expect(userController.createUser(fakeUserInsert)).rejects.toThrow('Mocked error')
     })
   })
 })

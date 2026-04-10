@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Body,
+  ConflictException,
   Controller,
   Delete,
   Get,
@@ -23,7 +24,7 @@ import {
   UserUpdateValidationPipe,
 } from '~/user/user.schema'
 import { match } from 'oxide.ts'
-import { UserNotFoundError } from '~/user/user.error'
+import { UserEmailExistsError, UserNotFoundError } from '~/user/user.error'
 import { ParseIntIdPipe } from '~/common/pipes/parse-int-id.pipe'
 
 @Controller('users')
@@ -46,7 +47,7 @@ export class UserController {
       Ok: (user) => user,
       Err: (error) => {
         if (error instanceof UserNotFoundError)
-          throw new NotFoundException({ code: ErrorCode.USER_NOT_FOUND, message: 'User not found' })
+          throw new NotFoundException({ code: ErrorCode.USER_NOT_FOUND, message: error.message })
         throw error
       },
     })
@@ -56,15 +57,17 @@ export class UserController {
   @ApiOperation({ summary: 'Create new user' })
   @ApiResponse({ status: 201, description: 'User created successfully' })
   @ApiResponse({ status: 400, description: 'Invalid request parameters' })
+  @ApiResponse({ status: 409, description: 'E-mail address is already in use' })
   async createUser(@Body(UserInsertValidationPipe) createUser: UserInsert) {
-    try {
-      return await this.userService.create(createUser)
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new BadRequestException({ code: ErrorCode.BAD_REQUEST, message: error.message })
-      }
-      throw error
-    }
+    const result = await this.userService.create(createUser)
+    return match(result, {
+      Ok: (user) => user,
+      Err: (error) => {
+        if (error instanceof UserEmailExistsError)
+          throw new ConflictException({ code: ErrorCode.EMAIL_EXISTS, message: error.message })
+        throw error
+      },
+    })
   }
 
   @Patch(':id')
