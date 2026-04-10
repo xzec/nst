@@ -4,7 +4,7 @@
   "sourceRoot": "libs/database/src",
   "projectType": "application",
   "namedInputs": {
-    "schema": ["{projectRoot}/src/schema"]
+    "schema": ["{projectRoot}/src/schema/**"]
   },
   "targets": {
     "build": {
