@@ -16,15 +16,12 @@ import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 import { ErrorCode } from '~/common/error'
 import { ApiResponseInterceptor } from '~/common/interceptors/api-response.interceptor'
 import { HttpExceptionFilter } from '~/common/filters/http-exception.filter'
-import {
-  type UserInsert,
-  UserInsertValidationPipe,
-  type UserUpdate,
-  UserUpdateValidationPipe,
-} from '~/user/user.schema'
+import { type UserUpdate, UserUpdateValidationPipe } from '~/user/user.schema'
 import { match } from 'oxide.ts'
 import { UserEmailExistsError, UserNotFoundError } from '~/user/user.error'
 import { ParseIntIdPipe } from '~/common/pipes/parse-int-id.pipe'
+import { CreateUserDto, CreateUserValidationPipe } from '~/user/dto/create-user.dto'
+import { UserResponseDto } from '~/user/dto/user.response.dto'
 
 @Controller('users')
 @UseInterceptors(ApiResponseInterceptor)
@@ -58,10 +55,10 @@ export class UserController {
   @ApiResponse({ status: 201, description: 'User created successfully' })
   @ApiResponse({ status: 400, description: 'Invalid request parameters' })
   @ApiResponse({ status: 409, description: 'E-mail address is already in use' })
-  async createUser(@Body(UserInsertValidationPipe) createUser: UserInsert) {
-    const result = await this.userService.create(createUser)
+  async createUser(@Body(CreateUserValidationPipe) dto: CreateUserDto) {
+    const result = await this.userService.create(dto)
     return match(result, {
-      Ok: (user) => user,
+      Ok: (user) => UserResponseDto.fromEntity(user),
       Err: (error) => {
         if (error instanceof UserEmailExistsError)
           throw new ConflictException({ code: ErrorCode.EMAIL_EXISTS, message: error.message })

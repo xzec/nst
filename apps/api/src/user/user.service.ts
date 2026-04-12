@@ -1,8 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { USER_REPOSITORY, UserRepository } from '~/user/user.repository'
-import type { UserInsert, UserSelect, UserUpdate } from '~/user/user.schema'
+import type { UserSelect, UserUpdate } from '~/user/user.schema'
 import { UserError, UserNotFoundError } from '~/user/user.error'
 import { Err, Ok, type Result } from 'oxide.ts'
+import type { CreateUserDto } from '~/user/dto/create-user.dto'
+import { UserEntity } from '~/user/domain/user.entity'
 
 @Injectable()
 export class UserService {
@@ -14,7 +16,8 @@ export class UserService {
     return Ok(user)
   }
 
-  async create(value: UserInsert): Promise<Result<UserSelect, UserError>> {
+  async create(dto: CreateUserDto): Promise<Result<UserEntity, UserError>> {
+    const value = UserEntity.create(dto)
     try {
       const user = await this.userRepository.create(value)
       return Ok(user)

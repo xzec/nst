@@ -8,7 +8,6 @@ export type UserSelect = z.infer<typeof userSelectSchema>
 
 export const userInsertSchema = createInsertSchema(users)
 export type UserInsert = z.infer<typeof userInsertSchema>
-export const UserInsertValidationPipe = new ZodValidationPipe(userInsertSchema)
 
 export const userUpdateSchema = createUpdateSchema(users)
 export type UserUpdate = z.infer<typeof userUpdateSchema>

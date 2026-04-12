@@ -2,7 +2,8 @@ import { Inject, Injectable } from '@nestjs/common'
 import { DRIZZLE_TOKEN, type DrizzleDb } from '~/drizzle/drizzle.config'
 import { eq } from 'drizzle-orm'
 import { users } from '@workspace/database'
-import { type UserSelect, type UserInsert, type UserUpdate, userSelectSchema } from '~/user/user.schema'
+import { type UserSelect, type UserUpdate, userSelectSchema } from '~/user/user.schema'
+import { UserEntity } from '~/user/domain/user.entity'
 
 export const USER_REPOSITORY = Symbol('USER_REPOSITORY')
 
@@ -17,10 +18,11 @@ export class UserRepository {
     return userSelectSchema.parse(row)
   }
 
-  async create(value: UserInsert): Promise<UserSelect> {
-    const [row] = await this.db.insert(users).values(value).returning()
+  async create(user: UserEntity): Promise<UserEntity> {
+    const persistedUser = user.toPersistence()
+    const [row] = await this.db.insert(users).values(persistedUser).returning()
 
-    return userSelectSchema.parse(row)
+    return UserEntity.fromPersistence(row)
   }
 
   async update(id: number, value: UserUpdate): Promise<UserSelect | null> {

@@ -6,12 +6,16 @@ import { Err, Ok } from 'oxide.ts'
 import { UserEmailExistsError, UserNotFoundError } from '~/user/user.error'
 import { ConflictException, NotFoundException } from '@nestjs/common'
 import { ErrorCode } from '~/common/error'
+import { UserEntity } from '~/user/domain/user.entity'
+import { UserResponseDto } from '~/user/dto/user.response.dto'
 
 const fakeUser = {
   id: 1,
   name: 'John Smith',
   email: 'john@smith.com',
 }
+const fakeUserEntity = new UserEntity(fakeUser)
+const fakeUserResponseDto = UserResponseDto.fromEntity(fakeUserEntity)
 const fakeUserUpsert = {
   name: 'John Smith',
   email: 'john@smith.com',
@@ -74,14 +78,14 @@ describe('UserController', () => {
 
   describe('createUser', () => {
     it('calls userService.create with the given user', async () => {
-      vi.mocked(userService.create).mockResolvedValue(Ok(fakeUser))
+      vi.mocked(userService.create).mockResolvedValue(Ok(fakeUserEntity))
       await userController.createUser(fakeUserUpsert)
       expect(userService.create).toHaveBeenCalledWith(fakeUserUpsert)
     })
 
     it('returns the created user', async () => {
-      vi.mocked(userService.create).mockResolvedValue(Ok(fakeUser))
-      expect(await userController.createUser(fakeUserUpsert)).toBe(fakeUser)
+      vi.mocked(userService.create).mockResolvedValue(Ok(fakeUserEntity))
+      expect(await userController.createUser(fakeUserUpsert)).toStrictEqual(fakeUserResponseDto)
     })
 
     it('throws ConflictException with appropriate contents when user e-mail already exists', async () => {
