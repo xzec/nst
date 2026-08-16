@@ -54,7 +54,7 @@ export class UserController {
   @ApiOperation({ summary: 'Create new user' })
   @ApiResponse({ status: 201, description: 'User created successfully' })
   @ApiResponse({ status: 400, description: 'Invalid request parameters' })
-  @ApiResponse({ status: 409, description: 'E-mail address is already in use' })
+  @ApiResponse({ status: 409, description: 'E-mail address already in use' })
   async createUser(@Body(CreateUserValidationPipe) dto: CreateUserDto) {
     const result = await this.userService.create(dto)
     return match(result, {
@@ -72,7 +72,7 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'User updated successfully' })
   @ApiResponse({ status: 400, description: 'Invalid request parameters' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  @ApiResponse({ status: 409, description: 'E-mail address is already in use' })
+  @ApiResponse({ status: 409, description: 'E-mail address already in use' })
   async updateUser(@Param('id', ParseIntIdPipe) id: number, @Body(UserUpdateValidationPipe) updateUser: UserUpdate) {
     const result = await this.userService.update(id, updateUser)
     return match(result, {

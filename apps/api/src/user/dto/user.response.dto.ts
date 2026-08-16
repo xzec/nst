@@ -8,7 +8,7 @@ const userResponseSchema = z.object({
   email: z.string(),
 })
 
-@ApiSchema({ name: 'CreateUserResponse', description: 'Create user response' })
+@ApiSchema({ name: 'UserResponse', description: 'User response' })
 export class UserResponseDto {
   @ApiProperty({ description: 'User id' })
   readonly id: number

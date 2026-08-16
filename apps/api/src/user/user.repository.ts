@@ -22,7 +22,7 @@ export class UserRepository {
     const persistedUser = user.toPersistence()
     const [row] = await this.db.insert(users).values(persistedUser).returning()
 
-    return UserEntity.fromPersistence(row)
+    return UserEntity.fromPersistence(row!)
   }
 
   async update(id: number, value: UserUpdate): Promise<UserSelect | null> {

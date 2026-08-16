@@ -24,7 +24,7 @@ const expectedUserNotFoundError = {
   response: { code: ErrorCode.USER_NOT_FOUND, message: 'User not found' },
 }
 const expectedUserEmailExistsError = {
-  response: { code: ErrorCode.EMAIL_EXISTS, message: 'E-mail address is already in use' },
+  response: { code: ErrorCode.EMAIL_EXISTS, message: 'E-mail address already in use' },
 }
 
 describe('UserController', () => {

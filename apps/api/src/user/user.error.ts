@@ -34,6 +34,6 @@ export class UserNotFoundError extends UserError {
 
 export class UserEmailExistsError extends UserError {
   constructor(cause?: unknown) {
-    super('E-mail address is already in use', cause)
+    super('E-mail address already in use', cause)
   }
 }

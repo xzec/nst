@@ -1,6 +1,12 @@
 import { type UserInsert, type UserSelect, userSelectSchema } from '~/user/user.schema'
-import { CreateUserDto } from '~/user/dto/create-user.dto'
-import type { UserProps } from '~/user/domain/user.types'
+
+interface UserProps {
+  id: number
+  name: string
+  email: string
+}
+
+type CreateUserProps = Omit<UserProps, 'id'>
 
 export class UserEntity {
   readonly id: number
@@ -13,11 +19,11 @@ export class UserEntity {
     this.email = props.email
   }
 
-  static create(props: CreateUserDto) {
-    return new UserEntity({ id: NaN, ...props })
+  static create(props: CreateUserProps) {
+    return new UserEntity({ id: 0, ...props })
   }
 
-  static fromPersistence(row: UserSelect | undefined): UserEntity {
+  static fromPersistence(row: UserSelect): UserEntity {
     return new UserEntity(userSelectSchema.parse(row))
   }
 
