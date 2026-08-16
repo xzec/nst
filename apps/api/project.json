@@ -60,6 +60,15 @@
       },
       "cache": true,
       "inputs": ["default", "^default"]
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit",
+        "cwd": "apps/api"
+      },
+      "cache": true,
+      "inputs": ["default", "^default"]
     }
   }
 }
