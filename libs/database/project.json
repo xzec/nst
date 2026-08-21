@@ -34,7 +34,8 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "tsx scripts/post-migrate.ts",
-        "cwd": "libs/database"
+        "cwd": "libs/database",
+        "envFile": ".env.development"
       },
       "dependsOn": ["drizzle-kit-migrate"]
     },
@@ -42,22 +43,58 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "drizzle-kit migrate",
-        "cwd": "libs/database"
+        "cwd": "libs/database",
+        "envFile": ".env.development"
       }
     },
     "seed": {
       "executor": "nx:run-commands",
       "options": {
         "command": "tsx scripts/seed.ts",
-        "cwd": "libs/database"
+        "cwd": "libs/database",
+        "envFile": ".env.development"
       }
     },
     "studio": {
       "executor": "nx:run-commands",
       "options": {
         "command": "drizzle-kit studio",
-        "cwd": "libs/database"
+        "cwd": "libs/database",
+        "envFile": ".env.development"
       }
+    },
+    "push:test-e2e": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "drizzle-kit push --force",
+        "cwd": "libs/database",
+        "envFile": ".env.test"
+      },
+      "cache": false
+    },
+    "post-migrate:test-e2e": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsx scripts/post-migrate.ts",
+        "cwd": "libs/database",
+        "envFile": ".env.test"
+      },
+      "dependsOn": ["push:test-e2e"],
+      "cache": false
+    },
+    "seed:test-e2e": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsx scripts/seed.ts",
+        "cwd": "libs/database",
+        "envFile": ".env.test"
+      },
+      "dependsOn": ["post-migrate:test-e2e"],
+      "cache": false
+    },
+    "create-test-e2e-db": {
+      "dependsOn": ["seed:test-e2e"],
+      "cache": false
     }
   }
 }

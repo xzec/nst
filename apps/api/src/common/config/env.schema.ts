@@ -5,7 +5,7 @@ export type Env = z.infer<typeof envSchema>
 
 export const envSchema = z.object({
   NODE_ENV: z
-    .enum(['development', 'production'])
+    .enum(['development', 'production', 'test'])
     .default('development')
     .describe('The environment the app is running in.'),
   PORT: z.coerce.number().default(3000).describe('The port to serve the API on.'),

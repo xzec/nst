@@ -5,11 +5,13 @@ import { UserModule } from '~/user/user.module'
 import { validateEnv } from '~/common/config/env.schema'
 import { LoggerMiddleware } from '~/common/middleware/logger.middleware'
 
+const nodeEnv = process.env.NODE_ENV ?? 'development'
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['../../.env', '.env'],
+      envFilePath: [`../../.env.${nodeEnv}.local`, `../../.env.${nodeEnv}`, `.env.${nodeEnv}.local`, `.env.${nodeEnv}`],
       validate: validateEnv,
     }),
     DrizzleModule.forRoot(),
