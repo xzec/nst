@@ -2,6 +2,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import type { INestApplication } from '@nestjs/common'
 import { apiReference } from '@scalar/nestjs-api-reference'
 
+export const SCALAR_PATH = '/docs'
+
 export function swagger(app: INestApplication) {
   const config = new DocumentBuilder()
     .setTitle('Nest 🤝 Drizzle')
@@ -14,7 +16,7 @@ export function swagger(app: INestApplication) {
   SwaggerModule.setup('swagger', app, document)
 
   app.use(
-    '/docs',
+    SCALAR_PATH,
     apiReference({
       content: document,
     })
