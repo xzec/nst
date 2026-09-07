@@ -5,10 +5,10 @@
   "author": "xzec",
   "license": "MIT",
   "engines": {
-    "node": ">=24.0.0",
-    "pnpm": ">=11.21.0"
+    "node": ">=26.8.1",
+    "pnpm": ">=12.3.2"
   },
-  "packageManager": "pnpm@11.21.0",
+  "packageManager": "pnpm@12.3.2",
   "scripts": {
     "build": "nx run-many -t build",
     "test": "nx run-many -t test",
