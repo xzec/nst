@@ -23,13 +23,21 @@ This project is a monorepo powered by `pnpm` and `nx`.
 - Create `.env` files in
     - root: [.env.sample](./.env.sample),
     - apps/api/: [.env.sample](./apps/api/.env.sample) (see also [env.schema.ts](./apps/api/src/common/config/env.schema.ts)).
-- Start database using `docker compose up -d` ([docker-compose.yml](./docker-compose.yml))
+- Start a database using `docker compose --env-file .env.development up -d db` ([docker-compose.yml](./docker-compose.yml))
 - Run migrations with `pnpm nx run db:migrate`
 - Run seeders with `pnpm nx run db:seed`
 
 ## Testing
 
+
 ### Unit
 
-- Powered by `vitest` and `nestjs/testing`
-- Test `api` project with `pnpm nx run api:test` 
+- Powered by `vitest`
+- Config: [vitest.config.ts](./apps/api/vitest.config.ts)
+- Run: `pnpm nx run api:test` 
+
+### End-to-end
+
+- Powered by `vitest`, `supertest` and `testcontainers`
+- Config: [vitest.config.e2e.ts](./apps/api/vitest.config.e2e.ts)
+- Run: `pnpm nx run api:test:e2e`

@@ -48,9 +48,10 @@
     "test:e2e": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "jest --config ./test/jest-e2e.json",
+        "command": "vitest run --config vitest.config.e2e.ts",
         "cwd": "apps/api"
-      }
+      },
+      "cache": false
     },
     "lint": {
       "executor": "nx:run-commands",

@@ -57,6 +57,13 @@
       "when": 1774783686921,
       "tag": "0007_strange_corsair",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1788884391916,
+      "tag": "0008_materialized_view_order_stats_customer_id_unique_idx",
+      "breakpoints": true
     }
   ]
 }

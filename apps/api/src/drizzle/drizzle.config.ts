@@ -1,8 +1,8 @@
 import * as schema from '@workspace/database'
-import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres'
+import { drizzle } from 'drizzle-orm/node-postgres'
 import { Pool, type PoolConfig } from 'pg'
 
-export type DrizzleDb = NodePgDatabase<typeof schema>
+export type DrizzleDb = ReturnType<typeof drizzle<typeof schema>>
 
 export const DRIZZLE_TOKEN = Symbol('DRIZZLE_TOKEN')
 

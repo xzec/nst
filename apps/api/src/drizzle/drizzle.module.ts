@@ -1,30 +1,52 @@
-import { Global, Module } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
-import { createDrizzleInstance, DRIZZLE_TOKEN } from '~/drizzle/drizzle.config'
-import type { Env } from '~/common/config/env.schema'
+import { type DynamicModule, Global, Inject, Module, type OnModuleDestroy } from '@nestjs/common'
+import { createDrizzleInstance, DRIZZLE_TOKEN, type DrizzleDb } from '~/drizzle/drizzle.config'
+
+export interface DrizzleModuleOptions {
+  connectionString: string
+  max?: number
+  min?: number
+  idleTimeoutMillis?: number
+  connectionTimeoutMillis?: number
+}
+
+export interface DrizzleModuleAsyncOptions {
+  inject?: any[]
+  useFactory: (...args: any[]) => DrizzleModuleOptions | Promise<DrizzleModuleOptions>
+}
 
 @Global()
 @Module({})
-export class DrizzleModule {
-  static forRoot() {
+export class DrizzleModule implements OnModuleDestroy {
+  constructor(@Inject(DRIZZLE_TOKEN) private readonly db: DrizzleDb) {}
+
+  static forRoot(options: DrizzleModuleOptions): DynamicModule {
     return {
       module: DrizzleModule,
       providers: [
         {
           provide: DRIZZLE_TOKEN,
-          inject: [ConfigService],
-          useFactory: (configService: ConfigService<Env, true>) => {
-            return createDrizzleInstance({
-              connectionString: configService.get('DATABASE_URL', { infer: true }),
-              max: configService.get('DB_POOL_MAX', { infer: true }),
-              min: configService.get('DB_POOL_MIN', { infer: true }),
-              idleTimeoutMillis: configService.get('DB_POOL_IDLE_TIMEOUT_MS', { infer: true }),
-              connectionTimeoutMillis: configService.get('DB_POOL_CONNECTION_TIMEOUT_MS', { infer: true }),
-            })
-          },
+          useFactory: () => createDrizzleInstance(options),
         },
       ],
       exports: [DRIZZLE_TOKEN],
     }
+  }
+
+  static forRootAsync({ inject = [], useFactory }: DrizzleModuleAsyncOptions): DynamicModule {
+    return {
+      module: DrizzleModule,
+      providers: [
+        {
+          provide: DRIZZLE_TOKEN,
+          inject,
+          useFactory: async (...args: any[]) => createDrizzleInstance(await useFactory(...args)),
+        },
+      ],
+      exports: [DRIZZLE_TOKEN],
+    }
+  }
+
+  async onModuleDestroy() {
+    await this.db.$client.end()
   }
 }

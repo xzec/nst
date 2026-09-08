@@ -12,6 +12,14 @@
       },
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
+    },
+    "./utils": {
+      "types": {
+        "import": "./dist/utils.d.mts",
+        "require": "./dist/utils.d.cts"
+      },
+      "import": "./dist/utils.mjs",
+      "require": "./dist/utils.cjs"
     }
   },
   "files": [
