@@ -41,7 +41,7 @@ export class UserController {
   ) {
     const result = await this.userService.findById(id)
     return match(result, {
-      Ok: (user) => user,
+      Ok: (user) => UserResponseDto.fromEntity(user),
       Err: (error) => {
         if (error instanceof UserNotFoundError)
           throw new NotFoundException({ code: ErrorCode.USER_NOT_FOUND, message: error.message })
@@ -76,7 +76,7 @@ export class UserController {
   async updateUser(@Param('id', ParseUuidIdPipe) id: string, @Body(UserUpdateValidationPipe) updateUser: UserUpdate) {
     const result = await this.userService.update(id, updateUser)
     return match(result, {
-      Ok: (user) => user,
+      Ok: (user) => UserResponseDto.fromEntity(user),
       Err: (error) => {
         if (error instanceof UserNotFoundError)
           throw new NotFoundException({ code: ErrorCode.USER_NOT_FOUND, message: error.message })
@@ -95,7 +95,7 @@ export class UserController {
   async deleteUser(@Param('id', ParseUuidIdPipe) id: string) {
     const result = await this.userService.delete(id)
     return match(result, {
-      Ok: (user) => user,
+      Ok: (user) => UserResponseDto.fromEntity(user),
       Err: (error) => {
         if (error instanceof UserNotFoundError)
           throw new NotFoundException({ code: ErrorCode.USER_NOT_FOUND, message: error.message })

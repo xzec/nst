@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common'
 import { DRIZZLE_TOKEN, type DrizzleDb } from '~/drizzle/drizzle.config'
 import { eq } from 'drizzle-orm'
 import { users } from '@workspace/database'
-import { type UserSelect, type UserUpdate, userSelectSchema } from '~/user/user.schema'
+import { type UserUpdate } from '~/user/user.schema'
 import { UserEntity } from '~/user/domain/user.entity'
 
 export const USER_REPOSITORY = Symbol('USER_REPOSITORY')
@@ -11,11 +11,11 @@ export const USER_REPOSITORY = Symbol('USER_REPOSITORY')
 export class UserRepository {
   constructor(@Inject(DRIZZLE_TOKEN) private readonly db: DrizzleDb) {}
 
-  async findById(id: string): Promise<UserSelect | null> {
+  async findById(id: string): Promise<UserEntity | null> {
     const [row] = await this.db.select().from(users).where(eq(users.id, id))
     if (!row) return null
 
-    return userSelectSchema.parse(row)
+    return UserEntity.fromPersistence(row)
   }
 
   async create(user: UserEntity): Promise<UserEntity> {
@@ -25,17 +25,17 @@ export class UserRepository {
     return UserEntity.fromPersistence(row!)
   }
 
-  async update(id: string, value: UserUpdate): Promise<UserSelect | null> {
+  async update(id: string, value: UserUpdate): Promise<UserEntity | null> {
     const [row] = await this.db.update(users).set(value).where(eq(users.id, id)).returning()
     if (!row) return null
 
-    return userSelectSchema.parse(row)
+    return UserEntity.fromPersistence(row)
   }
 
-  async delete(id: string): Promise<UserSelect | null> {
+  async delete(id: string): Promise<UserEntity | null> {
     const [row] = await this.db.delete(users).where(eq(users.id, id)).returning()
     if (!row) return null
 
-    return userSelectSchema.parse(row)
+    return UserEntity.fromPersistence(row)
   }
 }

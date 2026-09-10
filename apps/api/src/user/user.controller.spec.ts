@@ -53,14 +53,14 @@ describe('UserController', () => {
 
   describe('getUser', () => {
     it('calls userService.findById with the given id', async () => {
-      vi.mocked(userService.findById).mockResolvedValue(Ok(fakeUser))
+      vi.mocked(userService.findById).mockResolvedValue(Ok(fakeUserEntity))
       await userController.getUser(fakeUser.id)
       expect(userService.findById).toHaveBeenCalledWith(fakeUser.id)
     })
 
     it('returns the user', async () => {
-      vi.mocked(userService.findById).mockResolvedValue(Ok(fakeUser))
-      expect(await userController.getUser(fakeUser.id)).toBe(fakeUser)
+      vi.mocked(userService.findById).mockResolvedValue(Ok(fakeUserEntity))
+      expect(await userController.getUser(fakeUser.id)).toStrictEqual(fakeUserResponseDto)
     })
 
     it('throws NotFoundException with appropriate contents when user is not found', async () => {
@@ -103,14 +103,14 @@ describe('UserController', () => {
 
   describe('updateUser', () => {
     it('calls userService.update with the given data', async () => {
-      vi.mocked(userService.update).mockResolvedValue(Ok(fakeUser))
+      vi.mocked(userService.update).mockResolvedValue(Ok(fakeUserEntity))
       await userController.updateUser(fakeUser.id, fakeUserUpsert)
       expect(userService.update).toHaveBeenCalledWith(fakeUser.id, fakeUserUpsert)
     })
 
     it('returns the updated user', async () => {
-      vi.mocked(userService.update).mockResolvedValue(Ok(fakeUser))
-      expect(await userController.updateUser(fakeUser.id, fakeUserUpsert)).toBe(fakeUser)
+      vi.mocked(userService.update).mockResolvedValue(Ok(fakeUserEntity))
+      expect(await userController.updateUser(fakeUser.id, fakeUserUpsert)).toStrictEqual(fakeUserResponseDto)
     })
 
     it('throws NotFoundException with appropriate contents when user is not found', async () => {
@@ -135,14 +135,14 @@ describe('UserController', () => {
 
   describe('deleteUser', () => {
     it('calls userService.delete with the given id', async () => {
-      vi.mocked(userService.delete).mockResolvedValue(Ok(fakeUser))
+      vi.mocked(userService.delete).mockResolvedValue(Ok(fakeUserEntity))
       await userController.deleteUser(fakeUser.id)
       expect(userService.delete).toHaveBeenCalledWith(fakeUser.id)
     })
 
     it('returns the deleted user', async () => {
-      vi.mocked(userService.delete).mockResolvedValue(Ok(fakeUser))
-      expect(await userController.deleteUser(fakeUser.id)).toBe(fakeUser)
+      vi.mocked(userService.delete).mockResolvedValue(Ok(fakeUserEntity))
+      expect(await userController.deleteUser(fakeUser.id)).toStrictEqual(fakeUserResponseDto)
     })
 
     it('throws NotFoundException with appropriate contents when user is not found', async () => {

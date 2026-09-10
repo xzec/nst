@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { USER_REPOSITORY, UserRepository } from '~/user/user.repository'
-import type { UserSelect, UserUpdate } from '~/user/user.schema'
+import type { UserUpdate } from '~/user/user.schema'
 import { UserError, UserNotFoundError } from '~/user/user.error'
 import { Err, Ok, type Result } from 'oxide.ts'
 import type { CreateUserDto } from '~/user/dto/create-user.dto'
@@ -10,7 +10,7 @@ import { UserEntity } from '~/user/domain/user.entity'
 export class UserService {
   constructor(@Inject(USER_REPOSITORY) private readonly userRepository: UserRepository) {}
 
-  async findById(id: string): Promise<Result<UserSelect, UserError>> {
+  async findById(id: string): Promise<Result<UserEntity, UserError>> {
     const user = await this.userRepository.findById(id)
     if (!user) return Err(new UserNotFoundError())
     return Ok(user)
@@ -26,7 +26,7 @@ export class UserService {
     }
   }
 
-  async update(id: string, value: UserUpdate): Promise<Result<UserSelect, UserError>> {
+  async update(id: string, value: UserUpdate): Promise<Result<UserEntity, UserError>> {
     try {
       const user = await this.userRepository.update(id, value)
       if (!user) return Err(new UserNotFoundError())
@@ -36,7 +36,7 @@ export class UserService {
     }
   }
 
-  async delete(id: string): Promise<Result<UserSelect, UserError>> {
+  async delete(id: string): Promise<Result<UserEntity, UserError>> {
     const user = await this.userRepository.delete(id)
     if (!user) return Err(new UserNotFoundError())
     return Ok(user)
