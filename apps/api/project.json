@@ -53,7 +53,7 @@
       "executor": "nx:run-commands",
       "dependsOn": ["^build"],
       "options": {
-        "command": "vitest run --config vitest.config.e2e.ts",
+        "command": "vitest run --config vitest.config.e2e.mts",
         "cwd": "apps/api"
       }
     },

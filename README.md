@@ -33,11 +33,11 @@ This project is a monorepo powered by `pnpm` and `nx`.
 ### Unit
 
 - Powered by `vitest`
-- Config: [vitest.config.ts](./apps/api/vitest.config.ts)
+- Config: [vitest.config.mts](apps/api/vitest.config.mts)
 - Run: `pnpm nx run api:test` 
 
 ### End-to-end
 
 - Powered by `vitest`, `supertest` and `testcontainers`
-- Config: [vitest.config.e2e.ts](./apps/api/vitest.config.e2e.ts)
+- Config: [vitest.config.e2e.mts](apps/api/vitest.config.e2e.mts)
 - Run: `pnpm nx run api:test:e2e`

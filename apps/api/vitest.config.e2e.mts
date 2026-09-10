@@ -4,7 +4,7 @@ import { resolve } from 'node:path'
 
 export default defineConfig({
   test: {
-    include: ['**/*.spec.ts'],
+    include: ['**/*.e2e-spec.ts'],
     globals: true,
     root: './',
   },
@@ -18,7 +18,7 @@ export default defineConfig({
   resolve: {
     alias: {
       // Ensure Vitest correctly resolves TypeScript path aliases
-      '~': resolve(__dirname, './src'),
+      '~': resolve(import.meta.dirname, './src'),
     },
   },
 })
