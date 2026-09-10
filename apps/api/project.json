@@ -20,21 +20,24 @@
       "options": {
         "command": "nest start",
         "cwd": "apps/api"
-      }
+      },
+      "dependsOn": ["^build"]
     },
     "start:dev": {
       "executor": "nx:run-commands",
       "options": {
         "command": "nest start --watch",
         "cwd": "apps/api"
-      }
+      },
+      "dependsOn": ["^build"]
     },
     "start:debug": {
       "executor": "nx:run-commands",
       "options": {
         "command": "nest start --debug --watch",
         "cwd": "apps/api"
-      }
+      },
+      "dependsOn": ["^build"]
     },
     "test": {
       "executor": "nx:run-commands",
@@ -43,15 +46,16 @@
         "cwd": "apps/api"
       },
       "cache": true,
-      "inputs": ["default", "^default"]
+      "inputs": ["default", "^default"],
+      "dependsOn": ["^build"]
     },
     "test:e2e": {
       "executor": "nx:run-commands",
+      "dependsOn": ["^build"],
       "options": {
         "command": "vitest run --config vitest.config.e2e.ts",
         "cwd": "apps/api"
-      },
-      "cache": false
+      }
     },
     "lint": {
       "executor": "nx:run-commands",

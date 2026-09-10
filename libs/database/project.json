@@ -12,7 +12,10 @@
       "options": {
         "command": "tsdown",
         "cwd": "libs/database"
-      }
+      },
+      "cache": true,
+      "inputs": ["default", "^default"],
+      "outputs": ["{projectRoot}/dist"]
     },
     "generate": {
       "executor": "nx:run-commands",
