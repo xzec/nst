@@ -1,7 +1,8 @@
+import { randomUUIDv7 } from 'node:crypto'
 import { type UserInsert, type UserSelect, userSelectSchema } from '~/user/user.schema'
 
 interface UserProps {
-  id: number
+  id: string
   name: string
   email: string
 }
@@ -9,7 +10,7 @@ interface UserProps {
 type CreateUserProps = Omit<UserProps, 'id'>
 
 export class UserEntity {
-  readonly id: number
+  readonly id: string
   readonly name: string
   readonly email: string
 
@@ -20,7 +21,7 @@ export class UserEntity {
   }
 
   static create(props: CreateUserProps) {
-    return new UserEntity({ id: 0, ...props })
+    return new UserEntity({ id: randomUUIDv7(), ...props })
   }
 
   static fromPersistence(row: UserSelect): UserEntity {
@@ -28,6 +29,6 @@ export class UserEntity {
   }
 
   toPersistence(): UserInsert {
-    return { name: this.name, email: this.email }
+    return { id: this.id, name: this.name, email: this.email }
   }
 }

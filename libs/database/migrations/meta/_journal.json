@@ -15,6 +15,13 @@
       "when": 1789042565252,
       "tag": "0001_materialized_view_order_stats_customer_id_unique_idx",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789053054440,
+      "tag": "0002_uuidv7_primary_keys",
+      "breakpoints": true
     }
   ]
 }

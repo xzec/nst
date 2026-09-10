@@ -1,16 +1,20 @@
-import { integer, numeric, pgMaterializedView, pgTable, timestamp } from 'drizzle-orm/pg-core'
+import { integer, numeric, pgMaterializedView, pgTable, timestamp, uuid } from 'drizzle-orm/pg-core'
 import { countDistinct, desc, eq, max, sql } from 'drizzle-orm'
 import { users } from '~/schema/users'
 
 export const orders = pgTable('orders', {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  customerId: integer('customer_id').references(() => users.id),
+  id: uuid()
+    .primaryKey()
+    .default(sql`uuidv7()`),
+  customerId: uuid('customer_id').references(() => users.id),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
 export const orderItems = pgTable('order_items', {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  orderId: integer('order_id').references(() => orders.id),
+  id: uuid()
+    .primaryKey()
+    .default(sql`uuidv7()`),
+  orderId: uuid('order_id').references(() => orders.id),
   price: numeric('price', { precision: 10, scale: 2 }).notNull(),
   quantity: integer().notNull(),
 })

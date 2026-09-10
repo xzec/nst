@@ -19,7 +19,7 @@ import { HttpExceptionFilter } from '~/common/filters/http-exception.filter'
 import { type UserUpdate, UserUpdateValidationPipe } from '~/user/user.schema'
 import { match } from 'oxide.ts'
 import { UserEmailExistsError, UserNotFoundError } from '~/user/user.error'
-import { ParseIntIdPipe } from '~/common/pipes/parse-int-id.pipe'
+import { ParseUuidIdPipe } from '~/common/pipes/parse-uuid-id.pipe'
 import { CreateUserDto, CreateUserValidationPipe } from '~/user/dto/create-user.dto'
 import { UserResponseDto } from '~/user/dto/user.response.dto'
 
@@ -36,8 +36,8 @@ export class UserController {
   @ApiResponse({ status: 400, description: 'Invalid request parameters' })
   @ApiResponse({ status: 404, description: 'User not found' })
   async getUser(
-    @Param('id', ParseIntIdPipe)
-    id: number
+    @Param('id', ParseUuidIdPipe)
+    id: string
   ) {
     const result = await this.userService.findById(id)
     return match(result, {
@@ -73,7 +73,7 @@ export class UserController {
   @ApiResponse({ status: 400, description: 'Invalid request parameters' })
   @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 409, description: 'E-mail address already in use' })
-  async updateUser(@Param('id', ParseIntIdPipe) id: number, @Body(UserUpdateValidationPipe) updateUser: UserUpdate) {
+  async updateUser(@Param('id', ParseUuidIdPipe) id: string, @Body(UserUpdateValidationPipe) updateUser: UserUpdate) {
     const result = await this.userService.update(id, updateUser)
     return match(result, {
       Ok: (user) => user,
@@ -92,7 +92,7 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'User deleted successfully' })
   @ApiResponse({ status: 400, description: 'Invalid request parameters' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async deleteUser(@Param('id', ParseIntIdPipe) id: number) {
+  async deleteUser(@Param('id', ParseUuidIdPipe) id: string) {
     const result = await this.userService.delete(id)
     return match(result, {
       Ok: (user) => user,

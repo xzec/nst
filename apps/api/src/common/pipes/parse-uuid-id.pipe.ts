@@ -1,6 +1,7 @@
-import { BadRequestException, ParseIntPipe } from '@nestjs/common'
+import { BadRequestException, ParseUUIDPipe } from '@nestjs/common'
 import { ErrorCode } from '~/common/error'
 
-export const ParseIntIdPipe = new ParseIntPipe({
+export const ParseUuidIdPipe = new ParseUUIDPipe({
+  version: '7',
   exceptionFactory: (error) => new BadRequestException({ code: ErrorCode.BAD_REQUEST, message: error }),
 })

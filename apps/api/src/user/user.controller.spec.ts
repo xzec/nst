@@ -10,7 +10,7 @@ import { UserEntity } from '~/user/domain/user.entity'
 import { UserResponseDto } from '~/user/dto/user.response.dto'
 
 const fakeUser = {
-  id: 1,
+  id: '01924f8c-1b2e-7000-8000-000000000001',
   name: 'John Smith',
   email: 'john@smith.com',
 }

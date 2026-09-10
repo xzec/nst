@@ -3,7 +3,7 @@ import { ApiProperty, ApiSchema } from '@nestjs/swagger'
 import type { UserEntity } from '~/user/domain/user.entity'
 
 const userResponseSchema = z.object({
-  id: z.number(),
+  id: z.uuidv7(),
   name: z.string(),
   email: z.string(),
 })
@@ -11,7 +11,7 @@ const userResponseSchema = z.object({
 @ApiSchema({ name: 'UserResponse', description: 'User response' })
 export class UserResponseDto {
   @ApiProperty({ description: 'User id' })
-  readonly id: number
+  readonly id: string
 
   @ApiProperty({ description: 'User name' })
   readonly name: string

@@ -31,7 +31,7 @@
     "pg": "8.23.0"
   },
   "devDependencies": {
-    "@types/node": "24.12.0",
+    "@types/node": "26.5.0",
     "@types/pg": "8.21.0",
     "drizzle-kit": "0.31.10",
     "tsdown": "0.22.14",

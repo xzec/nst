@@ -10,7 +10,7 @@ import { UserEntity } from '~/user/domain/user.entity'
 export class UserService {
   constructor(@Inject(USER_REPOSITORY) private readonly userRepository: UserRepository) {}
 
-  async findById(id: number): Promise<Result<UserSelect, UserError>> {
+  async findById(id: string): Promise<Result<UserSelect, UserError>> {
     const user = await this.userRepository.findById(id)
     if (!user) return Err(new UserNotFoundError())
     return Ok(user)
@@ -26,7 +26,7 @@ export class UserService {
     }
   }
 
-  async update(id: number, value: UserUpdate): Promise<Result<UserSelect, UserError>> {
+  async update(id: string, value: UserUpdate): Promise<Result<UserSelect, UserError>> {
     try {
       const user = await this.userRepository.update(id, value)
       if (!user) return Err(new UserNotFoundError())
@@ -36,7 +36,7 @@ export class UserService {
     }
   }
 
-  async delete(id: number): Promise<Result<UserSelect, UserError>> {
+  async delete(id: string): Promise<Result<UserSelect, UserError>> {
     const user = await this.userRepository.delete(id)
     if (!user) return Err(new UserNotFoundError())
     return Ok(user)
