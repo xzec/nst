@@ -5,7 +5,7 @@ import path from 'node:path'
 export async function migrateDatabase(connectionString: string) {
   const db = drizzle(connectionString)
   try {
-    await migrate(db, { migrationsFolder: path.join(__dirname, '../drizzle') })
+    await migrate(db, { migrationsFolder: path.join(__dirname, '../migrations') })
   } finally {
     await db.$client.end()
   }

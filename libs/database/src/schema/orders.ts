@@ -16,7 +16,7 @@ export const orderItems = pgTable('order_items', {
 })
 
 // When modification results in dropping and re-creating the view, make sure to re-create the unique index as well.
-// Create a new custom migration file like libs/database/drizzle/0008_materialized_view_order_stats_customer_id_unique_idx.sql
+// Create a new custom migration file like libs/database/migrations/0001_materialized_view_order_stats_customer_id_unique_idx.sql
 // or just add the index to the generated migration file directly.
 export const orderStats = pgMaterializedView('order_stats').as((qb) =>
   qb

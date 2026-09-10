@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1789042370954,
+      "tag": "0000_charming_warstar",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789042565252,
+      "tag": "0001_materialized_view_order_stats_customer_id_unique_idx",
+      "breakpoints": true
+    }
+  ]
+}

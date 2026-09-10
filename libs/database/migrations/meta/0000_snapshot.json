@@ -1,9 +1,59 @@
 {
-  "id": "5e79cfc1-33b5-40b9-bc49-990852bcc137",
-  "prevId": "bbb9b7dd-b4be-4f42-9cf1-5893d0003074",
+  "id": "2447df44-fddc-4490-a37f-ea73f700716c",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "users_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.order_items": {
       "name": "order_items",
       "schema": "",
@@ -122,56 +172,6 @@
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
-    },
-    "public.users": {
-      "name": "users",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "identity": {
-            "type": "always",
-            "name": "users_id_seq",
-            "schema": "public",
-            "increment": "1",
-            "startWith": "1",
-            "minValue": "1",
-            "maxValue": "2147483647",
-            "cache": "1",
-            "cycle": false
-          }
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "email": {
-          "name": "email",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "users_email_unique": {
-          "name": "users_email_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
     }
   },
   "enums": {},
@@ -182,23 +182,6 @@
   "views": {
     "public.order_stats": {
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "identity": {
-            "type": "always",
-            "name": "order_stats_id_seq",
-            "schema": "public",
-            "increment": "1",
-            "startWith": "1",
-            "minValue": "1",
-            "maxValue": "2147483647",
-            "cache": "1",
-            "cycle": false
-          }
-        },
         "name": {
           "name": "name",
           "type": "varchar(255)",
@@ -206,7 +189,7 @@
           "notNull": true
         }
       },
-      "definition": "select \"users\".\"id\", \"users\".\"name\", count(distinct \"orders\".\"id\") as \"total_orders\", sum(\"order_items\".\"price\" * \"order_items\".\"quantity\") as \"total_spend\", avg(\"order_items\".\"price\"  * \"order_items\".\"quantity\") as \"avg_order_value\", max(\"orders\".\"created_at\") as \"last_order_at\" from \"users\" left join \"orders\" on \"orders\".\"customer_id\" = \"users\".\"id\" left join \"order_items\" on \"order_items\".\"order_id\" = \"orders\".\"id\" group by \"users\".\"id\", \"users\".\"name\"",
+      "definition": "select \"users\".\"id\" as \"customer_id\", \"users\".\"name\", count(distinct \"orders\".\"id\") as \"total_orders\", sum(\"order_items\".\"price\" * \"order_items\".\"quantity\") as \"total_spend\", avg(\"order_items\".\"price\" * \"order_items\".\"quantity\") as \"avg_order_value\", max(\"orders\".\"created_at\") as \"last_order_at\" from \"users\" left join \"orders\" on \"orders\".\"customer_id\" = \"users\".\"id\" left join \"order_items\" on \"order_items\".\"order_id\" = \"orders\".\"id\" group by \"users\".\"id\", \"users\".\"name\" order by \"total_spend\" desc nulls last",
       "name": "order_stats",
       "schema": "public",
       "isExisting": false,
